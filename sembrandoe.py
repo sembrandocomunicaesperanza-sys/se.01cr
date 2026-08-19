@@ -881,5 +881,32 @@ def eliminar_reporte():
         )
     )
 
+@app.context_processor
+def utilidades_de_fondos():
+    def obtener_fondo_actual(pestana):
+        """
+        Detecta si el usuario entra desde celular o PC 
+        y devuelve el enlace correcto de la carpeta static.
+        """
+        # Detecta si el agente de usuario (navegador) es un dispositivo móvil
+        user_agent = request.headers.get('User-Agent', '').lower()
+        es_celular = any(dispositivo in user_agent for dispositivo in ['mobile', 'android', 'iphone', 'ipad'])
+        
+        # Diccionario centralizado de control de fondos
+        configuracion_fondos = {
+            "bienvenida": "fondo_cel.png" if es_celular else "fondo_pc.png",
+            "dashboard": "fondo_dashboard-cel.png" if es_celular else "fondo_dashboard-pc.png",
+            "password": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png",
+            "usuarios": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png"
+        }
+        
+        # Obtiene el nombre del archivo asignado a la pestaña
+        archivo_imagen = configuracion_fondos.get(pestana, "fondo_pc.png")
+        
+        # Retorna la URL oficial de Flask hacia la carpeta static
+        return url_for('static', filename=archivo_imagen)
+
+    # Registra la función de forma global para usarla en cualquier HTML
+    return dict(obtener_fondo=obtener_fondo_actual)
 if __name__=="__main__":
     app.run(debug=True)
