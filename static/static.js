@@ -1,14 +1,14 @@
 // Apartado de control de fondos para las pestañas
 const configuracionFondos = {
-    "bienvenida": {
+    "bienvenida.html": {
         celular: "/static/fondo_cel.png",
         pc: "/static/fondo_pc.png"
     },
-    "dashboard": {
+    "dashboard.html": {
         celular: "/static/fondo_dashboard-cel.png",
         pc: "/static/fondo_dashboard-pc.png"
     },
-    "login": {
+    "login.html": {
         celular: "/static/fondo_login-cel.png",
         pc: "/static/fondo_login-pc.png"
     }
