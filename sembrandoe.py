@@ -27,7 +27,7 @@ NOMBRES_USUARIOS=[
 ]
 
 CONTRASENAS_RESPALDO={
-"Samantha Mendez":"sam094",
+"Samantha Mendez":"samO94",
 "Jayden Marchena":"Marchena1007",
 "Isaac Cascante":"colochos0304",
 "Ismael Navarrete":"ig2230",
