@@ -894,10 +894,10 @@ def utilidades_de_fondos():
         
         # Diccionario centralizado de control de fondos
         configuracion_fondos = {
-            "bienvenida": "fondo_cel.png" if es_celular else "fondo_pc.png",
-            "dashboard": "fondo_dashboard-cel.png" if es_celular else "fondo_dashboard-pc.png",
-            "password": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png",
-            "usuarios": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png"
+            "bienvenida.html": "fondo_cel.png" if es_celular else "fondo_pc.png",
+            "dashboard.html": "fondo_dashboard-cel.png" if es_celular else "fondo_dashboard-pc.png",
+            "password.html": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png",
+            "usuarios.html": "fondo_login-cel.png" if es_celular else "fondo_login-pc.png"
         }
         
         # Obtiene el nombre del archivo asignado a la pestaña
