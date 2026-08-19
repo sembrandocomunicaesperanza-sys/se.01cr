@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Iniciar Sesión - Sembrando Esperanza</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+html,body{
+width:100%;
+height:100%;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+background-color:#1a0033;
+overflow:hidden;
+}
+.contenedor-login{
+width:100vw;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+padding:25px;
+}
+.cabecera-login{
+width:100%;
+text-align:center;
+margin-bottom:25px;
+transform:translateY(-25px);
+position:relative;
+z-index:2;
+}
+.cabecera-login h1{
+color:#ffffff;
+font-size:58px;
+font-weight:900;
+margin:0;
+text-shadow:0 5px 18px rgba(0,0,0,.7);
+line-height:1;
+}
+.subtitulo{
+display:none;
+}
+.tarjeta-usuarios{
+width:100%;
+max-width:1000px;
+background:rgba(0,0,0,.60);
+padding:30px;
+border-radius:40px;
+box-shadow:0 15px 30px rgba(0,0,0,.35);
+backdrop-filter:blur(5px);
+-webkit-backdrop-filter:blur(5px);
+}
+.lista-botones{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+.btn-usuario{
+background:rgba(255,255,255,.10);
+color:white;
+border:1px solid rgba(255,255,255,.30);
+padding:22px 20px;
+font-size:18px;
+font-weight:900;
+border-radius:15px;
+cursor:pointer;
+transition:all .3s ease;
+text-align:center;
+text-decoration:none;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:68px;
+}
+.btn-usuario:hover{
+background:rgba(255,255,255,.25);
+border-color:#fff;
+transform:translateY(-2px);
+}
+@media(orientation:portrait){
+.contenedor-login{
+background-image:url("{{ url_for('static',filename='Fondo_login-cel.png') }}");
+padding:18px;
+justify-content:center;
+}
+.cabecera-login{
+transform:translateY(-15px);
+margin-bottom:18px;
+}
+.cabecera-login h1{
+font-size:36px;
+}
+.tarjeta-usuarios{
+max-width:420px;
+padding:20px;
+border-radius:28px;
+}
+.lista-botones{
+grid-template-columns:1fr;
+gap:12px;
+}
+.btn-usuario{
+padding:16px 15px;
+font-size:16px;
+min-height:55px;
+}
+}
+@media(orientation:landscape){
+.contenedor-login{
+background-image:url("{{ url_for('static',filename='Fondo_login-pc.png') }}");
+}
+}
+</style>
+</head>
+<body>
+<div class="contenedor-login">
+<div class="cabecera-login">
+<h1>Elige tu usuario</h1>
+</div>
+<div class="tarjeta-usuarios">
+<div class="lista-botones">
+{% for usuario in usuarios %}
+<a href="{{ url_for('pantalla_password',nombre=usuario) }}" class="btn-usuario">{{ usuario }}</a>
+{% endfor %}
+</div>
+</div>
+</div>
+</body>
+</html>

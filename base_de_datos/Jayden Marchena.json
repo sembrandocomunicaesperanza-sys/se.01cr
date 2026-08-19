@@ -1,0 +1,15 @@
+{
+    "nombre": "Jayden Marchena",
+    "rol": "Usuario",
+    "contrasena": "Marchena1607",
+    "perfil": {
+        "correo": " aun no",
+        "puesto": "integrante"
+    },
+    "tareas": {
+        "disponibles": [],
+        "en_revision": [],
+        "completadas": []
+    },
+    "reuniones": []
+}

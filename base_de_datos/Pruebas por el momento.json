@@ -1,0 +1,15 @@
+{
+    "nombre": "Pruebas por el momento",
+    "rol": "Usuario",
+    "perfil": {
+        "correo": "pruebasporelmomento@esperanza.org",
+        "puesto": "Área General"
+    },
+    "tareas": {
+        "disponibles": [],
+        "en_revision": [],
+        "completadas": []
+    },
+    "reuniones": [],
+    "contrasena": ""
+}

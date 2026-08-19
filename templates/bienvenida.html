@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenida - Sistema de Gestión</title>
+    <style>
+        /* Limpiar márgenes y asegurar pantalla completa fluida */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a0033;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* El enlace ahora es 100% invisible pero cubre toda la pantalla */
+        .pantalla-completa-btn {
+            text-decoration: none;
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            cursor: pointer;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: all 0.5s ease;
+        }
+
+        /* ==========================================
+           1. MODO VERTICAL (Celulares / Monitores Verticales)
+           ========================================== */
+        @media (orientation: portrait) {
+            .pantalla-completa-btn {
+                background-image: url("{{ url_for('static', filename='fondo_cel.png') }}");
+            }
+        }
+
+        /* ==========================================
+           2. MODO HORIZONTAL (Monitores de Computadora estándar)
+           ========================================== */
+        @media (orientation: landscape) {
+            .pantalla-completa-btn {
+                background-image: url("{{ url_for('static', filename='fondo_pc.png') }}");
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toda la pantalla es un enlace directo al Login sin textos encima -->
+    <a href="/usuarios" class="pantalla-completa-btn"></a>
+
+</body>
+</html>

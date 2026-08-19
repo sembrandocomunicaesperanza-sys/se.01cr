@@ -1,0 +1,15 @@
+{
+    "nombre": "Ismael Navarrete",
+    "rol": "Usuario",
+    "contrasena": "ig2230",
+    "perfil": {
+        "correo": "stevennavarreterivas2@gmail.com",
+        "puesto": "Subcoordinador del Proyecto"
+    },
+    "tareas": {
+        "disponibles": [],
+        "en_revision": [],
+        "completadas": []
+    },
+    "reuniones": []
+}

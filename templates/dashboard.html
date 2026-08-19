@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Panel de Control - Sembrando Esperanza</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+html,body{
+width:100%;
+min-height:100%;
+background:#1a0033;
+}
+body{
+overflow-x:hidden;
+}
+button,input,textarea,select{
+font-family:inherit;
+}
+button{
+cursor:pointer;
+}
+.contenedor-dashboard{
+display:flex;
+width:100%;
+min-height:100vh;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
+}
+.sidebar{
+width:280px;
+height:100vh;
+position:fixed;
+left:0;
+top:0;
+background:rgba(26,0,51,.96);
+color:white;
+display:flex;
+flex-direction:column;
+padding:20px 0;
+box-shadow:4px 0 15px rgba(0,0,0,.4);
+z-index:1000;
+backdrop-filter:blur(10px);
+}
+.sidebar-header{
+text-align:center;
+padding:10px 20px 20px;
+border-bottom:1px solid rgba(255,255,255,.1);
+}
+.sidebar-header h2{
+font-size:20px;
+margin-bottom:6px;
+}
+.sidebar-header small{
+color:#00ffcc;
+font-size:13px;
+}
+.menu-pestanas{
+display:flex;
+flex-direction:column;
+gap:8px;
+padding:20px 15px;
+flex:1;
+}
+.item-menu{
+color:rgba(255,255,255,.75);
+text-decoration:none;
+padding:14px 18px;
+border-radius:12px;
+display:flex;
+align-items:center;
+gap:12px;
+font-size:16px;
+font-weight:600;
+transition:.3s;
+}
+.item-menu:hover,
+.item-menu.activo{
+background:rgba(255,255,255,.15);
+color:#00ffcc;
+}
+.btn-cerrar-sesion{
+margin:0 15px;
+padding:13px;
+text-align:center;
+background:rgba(255,85,85,.15);
+color:#ff8888;
+text-decoration:none;
+border-radius:12px;
+font-weight:600;
+transition:.3s;
+}
+.btn-cerrar-sesion:hover{
+background:#ff4444;
+color:white;
+}
+.contenido-principal{
+min-height:100vh;
+padding:40px;
+}
+.tarjeta-blanca-lienzo{
+background:rgba(255,255,255,.96);
+width:100%;
+min-height:calc(100vh - 80px);
+border-radius:22px;
+padding:35px;
+box-shadow:0 8px 32px rgba(0,0,0,.18);
+}
+.titulo-pagina{
+color:#1a0033;
+font-size:30px;
+margin-bottom:8px;
+}
+.subtitulo-pagina{
+color:#666;
+font-size:15px;
+line-height:1.5;
+}
+.panel-administrador,
+.panel-crear-reunion{
+background:#fff8e1;
+border:1px solid #ffe082;
+border-radius:16px;
+padding:22px;
+margin-top:25px;
+}
+.panel-administrador h3,
+.panel-crear-reunion h3{
+color:#1a0033;
+}
+.formulario-panel{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:18px;
+}
+.formulario-panel label{
+color:#1a0033;
+font-weight:600;
+font-size:14px;
+}
+.formulario-panel input,
+.formulario-panel textarea,
+.formulario-panel select{
+width:100%;
+padding:13px 15px;
+border:1px solid #ccd4da;
+border-radius:10px;
+font-size:15px;
+background:white;
+outline:none;
+}
+.formulario-panel textarea{
+resize:vertical;
+min-height:100px;
+}
+.formulario-panel input:focus,
+.formulario-panel textarea:focus,
+.formulario-panel select:focus{
+border-color:#1a0033;
+}
+.formulario-panel button{
+background:#1a0033;
+color:white;
+border:none;
+padding:14px;
+border-radius:10px;
+font-size:15px;
+font-weight:700;
+}
+.formulario-panel button:hover{
+background:#3d0075;
+}
+.lista-tareas{
+display:grid;
+gap:20px;
+margin-top:25px;
+}
+.tarjeta-tarea,
+.tarjeta-reunion,
+.tarjeta-reporte,
+.reporte-recibido{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:16px;
+padding:20px;
+box-shadow:0 4px 12px rgba(0,0,0,.05);
+overflow:hidden;
+}
+.cabecera-tarea,
+.cabecera-reunion,
+.cabecera-reporte{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:15px;
+border-bottom:1px solid #eee;
+padding-bottom:12px;
+margin-bottom:12px;
+}
+.cabecera-tarea h3,
+.cabecera-reunion h3,
+.cabecera-reporte h4{
+color:#1a0033;
+word-break:break-word;
+}
+.cabecera-tarea small,
+.cabecera-reunion small,
+.cabecera-reporte small{
+color:#777;
+}
+.info-tarea p,
+.tarjeta-reunion p,
+.reporte-recibido p{
+margin:8px 0;
+color:#444;
+line-height:1.5;
+word-break:break-word;
+}
+.estado,
+.estado-reunion,
+.tipo-reporte{
+padding:6px 11px;
+border-radius:20px;
+font-size:12px;
+font-weight:700;
+white-space:nowrap;
+}
+.pendiente{
+background:#fff3cd;
+color:#856404;
+}
+.revision{
+background:#dbeafe;
+color:#1d4ed8;
+}
+.correccion{
+background:#fee2e2;
+color:#b91c1c;
+}
+.completada{
+background:#dcfce7;
+color:#15803d;
+}
+.programada{
+background:#dbeafe;
+color:#1d4ed8;
+}
+.finalizada{
+background:#e5e7eb;
+color:#555;
+}
+.acciones{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:15px;
+}
+.acciones form{
+margin:0;
+}
+.acciones button{
+border:none;
+padding:10px 14px;
+border-radius:9px;
+font-weight:700;
+}
+.btn-ver,
+.btn-revision{
+background:#1a0033;
+color:white;
+}
+.btn-editar{
+background:#e0e7ff;
+color:#3730a3;
+}
+.btn-borrar,
+.btn-eliminar{
+background:#fee2e2;
+color:#b91c1c;
+}
+.btn-completar,
+.btn-finalizar{
+background:#dcfce7;
+color:#15803d;
+}
+.btn-corregir{
+background:#fff3cd;
+color:#8a5d00;
+}
+.btn-reunion{
+display:inline-block;
+margin-top:12px;
+padding:11px 17px;
+background:#1a0033;
+color:white;
+text-decoration:none;
+border-radius:10px;
+font-weight:700;
+}
+.btn-reunion:hover{
+background:#3d0075;
+}
+.panel-oculto{
+display:none;
+margin-top:18px;
+padding:18px;
+border-radius:14px;
+background:#f8f9fa;
+border:1px solid #e5e7eb;
+}
+.archivos{
+margin-top:12px;
+}
+.archivos a{
+display:block;
+margin-top:7px;
+padding:9px;
+background:#f4f4f5;
+border-radius:8px;
+color:#1a0033;
+text-decoration:none;
+word-break:break-all;
+}
+.mensaje-correccion{
+background:#fff1f2;
+border-left:4px solid #dc2626;
+padding:14px;
+border-radius:10px;
+margin-top:12px;
+}
+.esperando{
+background:#dbeafe;
+color:#1d4ed8;
+padding:10px;
+border-radius:8px;
+font-weight:600;
+}
+.aprobada{
+background:#dcfce7;
+color:#15803d;
+padding:10px;
+border-radius:8px;
+font-weight:600;
+}
+.sin-contenido{
+text-align:center;
+padding:45px 20px;
+color:#777;
+background:white;
+border-radius:15px;
+margin-top:20px;
+}
+.grid-reuniones{
+display:grid;
+gap:25px;
+margin-top:25px;
+}
+.lista-reuniones{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+.tipo-reunion{
+display:inline-block;
+margin-top:8px;
+padding:6px 10px;
+background:#f3e8ff;
+color:#6b21a8;
+border-radius:20px;
+font-size:12px;
+font-weight:700;
+}
+.tarjeta-info-perfil{
+background:white;
+padding:25px;
+border-radius:18px;
+border:1px solid #ddd;
+margin-top:25px;
+max-width:700px;
+}
+.bloque-perfil{
+display:flex;
+gap:12px;
+background:#f8f9fa;
+padding:15px;
+border-radius:12px;
+margin-bottom:12px;
+border-left:4px solid #1a0033;
+}
+.bloque-perfil strong{
+width:140px;
+color:#1a0033;
+flex-shrink:0;
+}
+.bloque-perfil span{
+color:#333;
+word-break:break-word;
+}
+.calendario-contenedor{
+margin-top:25px;
+background:white;
+padding:25px;
+border-radius:18px;
+overflow:hidden;
+}
+.calendario-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:20px;
+}
+.calendario-header h3{
+color:#1a0033;
+text-align:center;
+}
+.calendario-header button{
+background:#1a0033;
+color:white;
+border:none;
+width:42px;
+height:42px;
+border-radius:10px;
+font-size:24px;
+}
+.dias-semana,
+.cuadricula-calendario{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:6px;
+}
+.dias-semana{
+text-align:center;
+font-weight:bold;
+color:#1a0033;
+margin-bottom:8px;
+}
+.dia-calendario{
+min-height:110px;
+background:#f8f9fa;
+padding:8px;
+border-radius:9px;
+overflow:hidden;
+}
+.dia-hoy{
+border:2px solid #00cfa7;
+}
+.dia-vacio{
+background:transparent;
+}
+.evento-calendario{
+font-size:11px;
+padding:5px;
+border-radius:6px;
+margin-top:4px;
+word-break:break-word;
+}
+.evento-tarea{
+background:#fff3cd;
+color:#856404;
+}
+.evento-reunion{
+background:#dbeafe;
+color:#1d4ed8;
+}
+.contenedor-reportes{
+display:grid;
+gap:25px;
+margin-top:25px;
+}
+.tarjeta-reporte h3{
+color:#1a0033;
+margin-bottom:8px;
+}
+.panel-reportes-recibidos{
+background:#f8f9fa;
+border-radius:18px;
+padding:25px;
+}
+.reporte-recibido{
+margin-top:15px;
+}
+.tipo-actividad{
+background:#dcfce7;
+color:#15803d;
+}
+.tipo-reunion-reporte{
+background:#dbeafe;
+color:#1d4ed8;
+}
+.menu-inferior{
+display:none;
+}
+
+/* =========================================================
+FORMATO PARA COMPUTADORA
+========================================================= */
+@media(min-width:769px){
+.contenedor-dashboard{
+background-image:url("{{ url_for('static',filename='fondo_dashboard-pc.png') }}");
+}
+.sidebar{
+display:flex;
+}
+.menu-inferior{
+display:none;
+}
+.contenido-principal{
+margin-left:280px;
+width:calc(100% - 280px);
+}
+.lista-tareas{
+grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.grid-reuniones{
+grid-template-columns:380px minmax(0,1fr);
+}
+.contenedor-reportes{
+grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.panel-reportes-recibidos{
+grid-column:1/-1;
+}
+}
+
+/* =========================================================
+FORMATO PARA CELULAR
+========================================================= */
+@media(max-width:768px){
+html,body{
+overflow-x:hidden;
+}
+.contenedor-dashboard{
+display:block;
+background-image:url("{{ url_for('static',filename='fondo_dashboard-cel.png') }}");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
+padding-bottom:82px;
+}
+.sidebar{
+display:none;
+}
+.contenido-principal{
+margin-left:0;
+width:100%;
+padding:12px;
+min-height:100vh;
+}
+.tarjeta-blanca-lienzo{
+width:100%;
+padding:17px;
+border-radius:18px;
+min-height:calc(100vh - 24px);
+}
+.titulo-pagina{
+font-size:25px;
+}
+.subtitulo-pagina{
+font-size:14px;
+}
+.panel-administrador,
+.panel-crear-reunion{
+padding:16px;
+margin-top:18px;
+}
+.lista-tareas{
+grid-template-columns:1fr;
+gap:14px;
+margin-top:18px;
+}
+.grid-reuniones{
+grid-template-columns:1fr;
+gap:15px;
+margin-top:18px;
+}
+.contenedor-reportes{
+grid-template-columns:1fr;
+gap:15px;
+margin-top:18px;
+}
+.panel-reportes-recibidos{
+grid-column:auto;
+padding:15px;
+}
+.tarjeta-tarea,
+.tarjeta-reunion,
+.tarjeta-reporte,
+.reporte-recibido{
+width:100%;
+padding:16px;
+border-radius:14px;
+}
+.cabecera-tarea,
+.cabecera-reunion,
+.cabecera-reporte{
+flex-direction:column;
+gap:8px;
+}
+.formulario-panel input,
+.formulario-panel textarea,
+.formulario-panel select{
+width:100%;
+font-size:16px;
+padding:13px;
+}
+.formulario-panel button{
+width:100%;
+min-height:48px;
+font-size:16px;
+}
+.acciones{
+flex-direction:column;
+width:100%;
+}
+.acciones form{
+width:100%;
+}
+.acciones button{
+width:100%;
+min-height:45px;
+}
+.btn-reunion{
+width:100%;
+text-align:center;
+}
+.bloque-perfil{
+flex-direction:column;
+gap:5px;
+}
+.bloque-perfil strong{
+width:auto;
+}
+.tarjeta-info-perfil{
+padding:16px;
+}
+.calendario-contenedor{
+padding:10px;
+margin-top:18px;
+overflow-x:auto;
+}
+.calendario-header{
+margin-bottom:12px;
+}
+.calendario-header h3{
+font-size:17px;
+}
+.calendario-header button{
+width:36px;
+height:36px;
+font-size:20px;
+}
+.dias-semana{
+font-size:9px;
+gap:2px;
+}
+.cuadricula-calendario{
+gap:2px;
+}
+.dia-calendario{
+min-height:72px;
+padding:4px;
+font-size:10px;
+border-radius:5px;
+}
+.evento-calendario{
+font-size:7px;
+padding:3px;
+margin-top:2px;
+overflow:hidden;
+}
+.menu-inferior{
+display:grid;
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:72px;
+grid-template-columns:repeat(5,1fr);
+background:#1a0033;
+box-shadow:0 -3px 15px rgba(0,0,0,.35);
+z-index:9999;
+}
+.menu-inferior a{
+color:#aaa;
+text-decoration:none;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:20px;
+gap:3px;
+}
+.menu-inferior a span{
+font-size:9px;
+font-weight:600;
+}
+.menu-inferior a.activo{
+color:#00ffcc;
+}
+}
+</style>
+</head>
+<body>
+<div class="contenedor-dashboard">
+
+<aside class="sidebar">
+<div class="sidebar-header">
+<h2>Sembrando Esperanza</h2>
+<small>{{ usuario.nombre }}</small>
+</div>
+<nav class="menu-pestanas">
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='tareas') }}" class="item-menu {% if pestana_activa=='tareas' %}activo{% endif %}">📋 <span>Tareas</span></a>
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='reuniones') }}" class="item-menu {% if pestana_activa=='reuniones' %}activo{% endif %}">👥 <span>Reuniones</span></a>
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='perfil') }}" class="item-menu {% if pestana_activa=='perfil' %}activo{% endif %}">👤 <span>Mi Perfil</span></a>
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='calendario') }}" class="item-menu {% if pestana_activa=='calendario' %}activo{% endif %}">📅 <span>Calendario</span></a>
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='reportes') }}" class="item-menu {% if pestana_activa=='reportes' %}activo{% endif %}">📊 <span>Reportes</span></a>
+</nav>
+<a href="{{ url_for('cerrar_sesion') }}" class="btn-cerrar-sesion">🚪 Cerrar sesión</a>
+</aside>
+
+<main class="contenido-principal">
+<div class="tarjeta-blanca-lienzo">
+
+{% if pestana_activa=='tareas' %}
+
+<h2 class="titulo-pagina">📋 Tareas</h2>
+<p class="subtitulo-pagina">Hola <strong>{{ usuario.nombre }}</strong>. Aquí puedes consultar y administrar las tareas.</p>
+
+{% if es_direccion_general %}
+<div class="panel-administrador">
+<h3>➕ Crear nueva tarea</h3>
+<form class="formulario-panel" method="POST" action="{{ url_for('crear_tarea') }}" enctype="multipart/form-data">
+<label>Nombre de la tarea</label>
+<input type="text" name="nombre" placeholder="Nombre de la tarea" required>
+
+<label>Fecha de entrega</label>
+<input type="date" name="fecha_entrega" required>
+
+<label>Descripción</label>
+<textarea name="descripcion" rows="5" placeholder="Describe la tarea..." required></textarea>
+
+<label>Asignar tarea a</label>
+<select name="asignado" required>
+<option value="">Seleccionar usuario</option>
+{% for integrante in usuarios %}
+{% if integrante.identificador!='Sembrando Esperanza' %}
+<option value="{{ integrante.identificador }}">{{ integrante.nombre }} - {{ integrante.puesto }}</option>
+{% endif %}
+{% endfor %}
+</select>
+
+<label>Archivos adjuntos</label>
+<input type="file" name="archivos" multiple>
+
+<button type="submit">➕ Crear y asignar tarea</button>
+</form>
+</div>
+{% endif %}
+
+<div class="lista-tareas">
+{% for tarea in tareas %}
+<div class="tarjeta-tarea">
+
+<div class="cabecera-tarea">
+<div>
+<h3>{{ tarea.nombre }}</h3>
+<small>👤 Asignada a: {{ tarea.asignado }}</small>
+</div>
+<span class="estado {{ tarea.estado }}">{{ tarea.estado|capitalize }}</span>
+</div>
+
+<div class="info-tarea">
+<p><strong>📅 Fecha de entrega:</strong> {{ tarea.fecha_entrega or 'Sin fecha' }}</p>
+<p><strong>📝 Descripción:</strong> {{ tarea.descripcion }}</p>
+
+{% if tarea.archivos %}
+<div class="archivos">
+<strong>📎 Archivos adjuntos:</strong>
+{% for archivo in tarea.archivos %}
+<a href="{{ url_for('static',filename='uploads/'+archivo) }}" target="_blank">📄 {{ archivo }}</a>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if tarea.archivos_revision %}
+<div class="archivos">
+<strong>📥 Archivos enviados a revisión:</strong>
+{% for archivo in tarea.archivos_revision %}
+<a href="{{ url_for('static',filename='uploads/'+archivo) }}" target="_blank">📄 {{ archivo }}</a>
+{% endfor %}
+</div>
+{% endif %}
+
+{% if tarea.comentario_revision %}
+<p><strong>💬 Comentario:</strong> {{ tarea.comentario_revision }}</p>
+{% endif %}
+
+{% if tarea.correccion %}
+<div class="mensaje-correccion">
+<strong>⚠️ Corrección solicitada:</strong>
+<p>{{ tarea.correccion }}</p>
+</div>
+{% endif %}
+</div>
+
+{% if es_direccion_general %}
+
+<div class="acciones">
+
+{% if tarea.estado!='completada' %}
+<form method="POST" action="{{ url_for('completar_tarea') }}">
+<input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+<button type="submit" class="btn-completar">✅ Marcar completada</button>
+</form>
+{% endif %}
+
+<button type="button" class="btn-editar" onclick="alternarPanel('editar-{{ tarea.id }}')">✏️ Editar</button>
+
+{% if tarea.estado=='revision' %}
+<button type="button" class="btn-corregir" onclick="alternarPanel('corregir-{{ tarea.id }}')">🔄 Enviar a corregir</button>
+{% endif %}
+
+<form method="POST" action="{{ url_for('eliminar_tarea') }}" onsubmit="return confirm('¿Seguro que deseas eliminar esta tarea?');">
+<input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+<button type="submit" class="btn-borrar">🗑️ Eliminar</button>
+</form>
+
+</div>
+
+<div id="editar-{{ tarea.id }}" class="panel-oculto">
+<h3>✏️ Editar tarea</h3>
+<form class="formulario-panel" method="POST" action="{{ url_for('editar_tarea') }}" enctype="multipart/form-data">
+<input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+
+<label>Nombre</label>
+<input type="text" name="nombre" value="{{ tarea.nombre }}" required>
+
+<label>Fecha de entrega</label>
+<input type="date" name="fecha_entrega" value="{{ tarea.fecha_entrega }}" required>
+
+<label>Descripción</label>
+<textarea name="descripcion" required>{{ tarea.descripcion }}</textarea>
+
+<label>Asignar a</label>
+<select name="asignado" required>
+{% for integrante in usuarios %}
+{% if integrante.identificador!='Sembrando Esperanza' %}
+<option value="{{ integrante.identificador }}" {% if integrante.identificador==tarea.asignado %}selected{% endif %}>{{ integrante.nombre }}</option>
+{% endif %}
+{% endfor %}
+</select>
+
+<label>Agregar archivos</label>
+<input type="file" name="archivos" multiple>
+
+<button type="submit">💾 Guardar cambios</button>
+</form>
+</div>
+
+{% if tarea.estado=='revision' %}
+<div id="corregir-{{ tarea.id }}" class="panel-oculto">
+<h3>🔄 Solicitar corrección</h3>
+<form class="formulario-panel" method="POST" action="{{ url_for('procesar_revision') }}">
+<input type="hidden" name="accion" value="corregir_tarea">
+<input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+
+<label>¿Qué debe corregir?</label>
+<textarea name="correccion" placeholder="Escribe las correcciones necesarias..." required></textarea>
+
+<button type="submit">🔄 Enviar corrección</button>
+</form>
+</div>
+{% endif %}
+
+{% else %}
+
+<div class="acciones">
+
+<button type="button" class="btn-ver" onclick="alternarPanel('detalle-{{ tarea.id }}')">👁️ Ver tarea</button>
+
+{% if tarea.estado=='pendiente' or tarea.estado=='correccion' %}
+<button type="button" class="btn-revision" onclick="alternarPanel('revision-{{ tarea.id }}')">📤 Enviar a revisión</button>
+{% endif %}
+
+{% if tarea.estado=='revision' %}
+<span class="esperando">⏳ Esperando revisión</span>
+{% endif %}
+
+{% if tarea.estado=='completada' %}
+<span class="aprobada">✅ Tarea completada</span>
+{% endif %}
+
+</div>
+
+<div id="detalle-{{ tarea.id }}" class="panel-oculto">
+<h3>📋 Información de la tarea</h3>
+<p><strong>Nombre:</strong> {{ tarea.nombre }}</p>
+<p><strong>Fecha:</strong> {{ tarea.fecha_entrega }}</p>
+<p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
+</div>
+
+{% if tarea.estado=='pendiente' or tarea.estado=='correccion' %}
+<div id="revision-{{ tarea.id }}" class="panel-oculto">
+<h3>📤 Enviar trabajo a revisión</h3>
+
+<form class="formulario-panel" method="POST" action="{{ url_for('procesar_revision') }}" enctype="multipart/form-data">
+
+<input type="hidden" name="accion" value="enviar_revision">
+<input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+
+<label>Comentario</label>
+<textarea name="comentario_revision" placeholder="Escribe un comentario sobre el trabajo realizado..."></textarea>
+
+<label>Adjuntar trabajo</label>
+<input type="file" name="archivos_revision" multiple>
+
+<button type="submit">📤 Enviar a Dirección General</button>
+
+</form>
+</div>
+{% endif %}
+
+{% endif %}
+
+</div>
+
+{% else %}
+
+<div class="sin-contenido">
+<h3>📭 No hay tareas disponibles</h3>
+<p>Actualmente no tienes tareas asignadas.</p>
+</div>
+
+{% endfor %}
+</div>
+
+{% elif pestana_activa=='reuniones' %}
+
+<h2 class="titulo-pagina">👥 Reuniones</h2>
+<p class="subtitulo-pagina">Crea reuniones con el Coordinador o con todo el equipo.</p>
+
+<div class="grid-reuniones">
+
+<div class="panel-crear-reunion">
+<h3>➕ Crear reunión</h3>
+
+<form class="formulario-panel" method="POST" action="{{ url_for('crear_reunion') }}">
+
+<label>Nombre de la reunión</label>
+<input type="text" name="titulo" required>
+
+<label>Fecha</label>
+<input type="date" name="fecha" required>
+
+<label>Hora</label>
+<input type="time" name="hora" required>
+
+<label>Enlace de la reunión</label>
+<input type="url" name="url_reunion" placeholder="https://meet.google.com/...">
+
+<label>Descripción</label>
+<textarea name="descripcion" placeholder="Temas que se tratarán..."></textarea>
+
+<label>¿Quiénes participarán?</label>
+<select name="tipo_reunion" required>
+<option value="todos">👥 Todos los usuarios</option>
+<option value="coordinador">👤 Solo con el Coordinador</option>
+</select>
+
+<button type="submit">📅 Crear reunión</button>
+
+</form>
+</div>
+
+<div class="lista-reuniones">
+
+{% for reunion in reuniones %}
+
+<div class="tarjeta-reunion">
+
+<div class="cabecera-reunion">
+<div>
+<h3>{{ reunion.titulo }}</h3>
+<small>Creada por {{ reunion.creador_nombre }}</small>
+</div>
+
+<span class="estado-reunion {{ reunion.estado }}">{{ reunion.estado|capitalize }}</span>
+</div>
+
+<p><strong>📅 Fecha:</strong> {{ reunion.fecha }}</p>
+<p><strong>🕒 Hora:</strong> {{ reunion.hora }}</p>
+
+{% if reunion.descripcion %}
+<p><strong>📝 Descripción:</strong> {{ reunion.descripcion }}</p>
+{% endif %}
+
+{% if reunion.tipo=='coordinador' %}
+<span class="tipo-reunion">👤 Solo con Coordinador</span>
+{% else %}
+<span class="tipo-reunion">👥 Todo el equipo</span>
+{% endif %}
+
+{% if reunion.url_reunion %}
+<div>
+<a href="{{ reunion.url_reunion }}" target="_blank" rel="noopener noreferrer" class="btn-reunion">🔗 Entrar a la reunión</a>
+</div>
+{% endif %}
+
+{% if reunion.creador_id==usuario.identificador or es_direccion_general %}
+
+<div class="acciones">
+
+{% if reunion.estado!='finalizada' %}
+<form method="POST" action="{{ url_for('finalizar_reunion') }}">
+<input type="hidden" name="reunion_id" value="{{ reunion.id }}">
+<button type="submit" class="btn-finalizar">✅ Finalizar reunión</button>
+</form>
+{% endif %}
+
+<form method="POST" action="{{ url_for('eliminar_reunion') }}" onsubmit="return confirm('¿Seguro que deseas eliminar esta reunión?');">
+<input type="hidden" name="reunion_id" value="{{ reunion.id }}">
+<button type="submit" class="btn-eliminar">🗑️ Eliminar reunión</button>
+</form>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% else %}
+
+<div class="sin-contenido">
+<h3>📭 No hay reuniones programadas</h3>
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+{% elif pestana_activa=='perfil' %}
+
+<h2 class="titulo-pagina">👤 Mi Perfil</h2>
+<p class="subtitulo-pagina">Información registrada en tu archivo de usuario.</p>
+
+<div class="tarjeta-info-perfil">
+
+<div class="bloque-perfil">
+<strong>Nombre:</strong>
+<span>{{ usuario.nombre }}</span>
+</div>
+
+<div class="bloque-perfil">
+<strong>Correo:</strong>
+<span>{{ usuario.correo }}</span>
+</div>
+
+<div class="bloque-perfil">
+<strong>Puesto:</strong>
+<span>{{ usuario.puesto }}</span>
+</div>
+
+<div class="bloque-perfil">
+<strong>Rol:</strong>
+<span>{{ usuario.rol }}</span>
+</div>
+
+</div>
+
+{% elif pestana_activa=='calendario' %}
+
+<h2 class="titulo-pagina">📅 Calendario</h2>
+<p class="subtitulo-pagina">Aquí aparecen las fechas de entrega de tus tareas y las reuniones que te corresponden.</p>
+
+<div class="calendario-contenedor">
+
+<div class="calendario-header">
+<button type="button" onclick="mesAnterior()">‹</button>
+<h3 id="tituloCalendario"></h3>
+<button type="button" onclick="mesSiguiente()">›</button>
+</div>
+
+<div class="dias-semana">
+<div>Dom</div>
+<div>Lun</div>
+<div>Mar</div>
+<div>Mié</div>
+<div>Jue</div>
+<div>Vie</div>
+<div>Sáb</div>
+</div>
+
+<div id="calendarioVisual" class="cuadricula-calendario"></div>
+
+</div>
+
+{% elif pestana_activa=='reportes' %}
+
+<h2 class="titulo-pagina">📊 Reportes</h2>
+<p class="subtitulo-pagina">Los reportes enviados llegan directamente a Dirección General.</p>
+
+<div class="contenedor-reportes">
+
+<div class="tarjeta-reporte">
+
+<h3>📦 Reporte de actividad / recolecta</h3>
+
+<form class="formulario-panel" method="POST" action="{{ url_for('enviar_reporte') }}" enctype="multipart/form-data">
+
+<input type="hidden" name="tipo_reporte" value="actividad">
+
+<label>Nombre de la actividad</label>
+<input type="text" name="titulo" required>
+
+<label>Fecha</label>
+<input type="date" name="fecha" required>
+
+<label>Lugar</label>
+<input type="text" name="lugar">
+
+<label>Descripción</label>
+<textarea name="descripcion" required></textarea>
+
+<label>Resultados</label>
+<textarea name="resultados"></textarea>
+
+<label>Cantidad de beneficiados</label>
+<input type="number" name="beneficiados" min="0">
+
+<label>Adjuntar documentos</label>
+<input type="file" name="documentos" multiple>
+
+<button type="submit">📤 Enviar a Dirección General</button>
+
+</form>
+
+</div>
+
+<div class="tarjeta-reporte">
+
+<h3>👥 Reporte de reunión</h3>
+
+<form class="formulario-panel" method="POST" action="{{ url_for('enviar_reporte') }}" enctype="multipart/form-data">
+
+<input type="hidden" name="tipo_reporte" value="reunion">
+
+<label>Nombre de la reunión</label>
+<input type="text" name="titulo" required>
+
+<label>Fecha</label>
+<input type="date" name="fecha" required>
+
+<label>Hora</label>
+<input type="time" name="hora">
+
+<label>Participantes</label>
+<textarea name="participantes"></textarea>
+
+<label>Temas tratados</label>
+<textarea name="descripcion" required></textarea>
+
+<label>Acuerdos</label>
+<textarea name="acuerdos"></textarea>
+
+<label>Adjuntar documentos</label>
+<input type="file" name="documentos" multiple>
+
+<button type="submit">📤 Enviar a Dirección General</button>
+
+</form>
+
+</div>
+
+{% if es_direccion_general %}
+
+<div class="panel-reportes-recibidos">
+
+<h3>📥 Reportes recibidos por Dirección General</h3>
+
+{% for reporte in reportes %}
+
+<div class="reporte-recibido">
+
+<div class="cabecera-reporte">
+
+<div>
+<h4>{{ reporte.titulo }}</h4>
+<small>Enviado por {{ reporte.usuario }}</small>
+</div>
+
+{% if reporte.tipo=='actividad' %}
+<span class="tipo-reporte tipo-actividad">Actividad</span>
+{% else %}
+<span class="tipo-reporte tipo-reunion-reporte">Reunión</span>
+{% endif %}
+
+</div>
+
+<p><strong>📅 Fecha:</strong> {{ reporte.fecha }}</p>
+
+{% if reporte.hora %}
+<p><strong>🕒 Hora:</strong> {{ reporte.hora }}</p>
+{% endif %}
+
+{% if reporte.lugar %}
+<p><strong>📍 Lugar:</strong> {{ reporte.lugar }}</p>
+{% endif %}
+
+<p><strong>📝 Descripción:</strong> {{ reporte.descripcion }}</p>
+
+{% if reporte.resultados %}
+<p><strong>📈 Resultados:</strong> {{ reporte.resultados }}</p>
+{% endif %}
+
+{% if reporte.beneficiados %}
+<p><strong>👥 Beneficiados:</strong> {{ reporte.beneficiados }}</p>
+{% endif %}
+
+{% if reporte.participantes %}
+<p><strong>👥 Participantes:</strong> {{ reporte.participantes }}</p>
+{% endif %}
+
+{% if reporte.acuerdos %}
+<p><strong>🤝 Acuerdos:</strong> {{ reporte.acuerdos }}</p>
+{% endif %}
+
+{% if reporte.documentos %}
+<div class="archivos">
+<strong>📎 Documentos:</strong>
+
+{% for archivo in reporte.documentos %}
+<a href="{{ url_for('static',filename='uploads/'+archivo) }}" target="_blank">📄 {{ archivo }}</a>
+{% endfor %}
+
+</div>
+{% endif %}
+
+<div class="acciones">
+<form method="POST" action="{{ url_for('eliminar_reporte') }}" onsubmit="return confirm('¿Seguro que deseas eliminar este reporte?');">
+<input type="hidden" name="reporte_id" value="{{ reporte.id }}">
+<button type="submit" class="btn-eliminar">🗑️ Eliminar reporte</button>
+</form>
+</div>
+
+</div>
+
+{% else %}
+
+<div class="sin-contenido">
+<p>No hay reportes recibidos.</p>
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endif %}
+
+</div>
+</main>
+
+<nav class="menu-inferior">
+
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='tareas') }}" class="{% if pestana_activa=='tareas' %}activo{% endif %}">
+📋
+<span>Tareas</span>
+</a>
+
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='reuniones') }}" class="{% if pestana_activa=='reuniones' %}activo{% endif %}">
+👥
+<span>Reuniones</span>
+</a>
+
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='perfil') }}" class="{% if pestana_activa=='perfil' %}activo{% endif %}">
+👤
+<span>Perfil</span>
+</a>
+
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='calendario') }}" class="{% if pestana_activa=='calendario' %}activo{% endif %}">
+📅
+<span>Calendario</span>
+</a>
+
+<a href="{{ url_for('inicio_sistema',nombre_usuario=usuario.identificador,pestana='reportes') }}" class="{% if pestana_activa=='reportes' %}activo{% endif %}">
+📊
+<span>Reportes</span>
+</a>
+
+</nav>
+
+</div>
+
+<script>
+
+function alternarPanel(id){
+const panel=document.getElementById(id);
+if(!panel){
+return;
+}
+if(panel.style.display==="block"){
+panel.style.display="none";
+}else{
+panel.style.display="block";
+}
+}
+
+const eventosCalendario= calendario|tojson ;
+
+const fechaActual=new Date();
+let mesActual=fechaActual.getMonth();
+let anioActual=fechaActual.getFullYear();
+
+const meses=[
+"Enero",
+"Febrero",
+"Marzo",
+"Abril",
+"Mayo",
+"Junio",
+"Julio",
+"Agosto",
+"Septiembre",
+"Octubre",
+"Noviembre",
+"Diciembre"
+];
+
+function generarCalendario(){
+
+const calendario=document.getElementById("calendarioVisual");
+const titulo=document.getElementById("tituloCalendario");
+
+if(!calendario||!titulo){
+return;
+}
+
+calendario.innerHTML="";
+titulo.textContent=meses[mesActual]+" "+anioActual;
+
+const primerDia=new Date(anioActual,mesActual,1).getDay();
+const cantidadDias=new Date(anioActual,mesActual+1,0).getDate();
+
+for(let i=0;i<primerDia;i++){
+
+const espacio=document.createElement("div");
+espacio.className="dia-calendario dia-vacio";
+calendario.appendChild(espacio);
+
+}
+
+for(let dia=1;dia<=cantidadDias;dia++){
+
+const elemento=document.createElement("div");
+elemento.className="dia-calendario";
+
+const numero=document.createElement("strong");
+numero.textContent=dia;
+
+elemento.appendChild(numero);
+
+const hoy=new Date();
+
+if(
+dia===hoy.getDate()&&
+mesActual===hoy.getMonth()&&
+anioActual===hoy.getFullYear()
+){
+elemento.classList.add("dia-hoy");
+}
+
+const fecha=
+anioActual+"-"+
+String(mesActual+1).padStart(2,"0")+"-"+
+String(dia).padStart(2,"0");
+
+eventosCalendario.forEach(function(evento){
+
+if(evento.fecha===fecha){
+
+const caja=document.createElement("div");
+
+if(evento.tipo==="tarea"){
+
+caja.className="evento-calendario evento-tarea";
+caja.textContent="📋 "+evento.titulo;
+
+}else{
+
+caja.className="evento-calendario evento-reunion";
+
+if(evento.hora){
+caja.textContent="👥 "+evento.titulo+" "+evento.hora;
+}else{
+caja.textContent="👥 "+evento.titulo;
+}
+
+}
+
+elemento.appendChild(caja);
+
+}
+
+});
+
+calendario.appendChild(elemento);
+
+}
+
+}
+
+function mesAnterior(){
+
+mesActual--;
+
+if(mesActual<0){
+mesActual=11;
+anioActual--;
+}
+
+generarCalendario();
+
+}
+
+function mesSiguiente(){
+
+mesActual++;
+
+if(mesActual>11){
+mesActual=0;
+anioActual++;
+}
+
+generarCalendario();
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+generarCalendario();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+    "nombre": "Sembrando Esperanza",
+    "rol": "Coordinador",
+    "contrasena": "adminCR",
+    "perfil": {
+        "correo": "sembrandocomunicaesperanza@gmail.com",
+        "puesto": "Dirección General"
+    },
+    "tareas": {
+        "disponibles": [],
+        "en_revision": [],
+        "completadas": []
+    },
+    "reuniones": []
+}

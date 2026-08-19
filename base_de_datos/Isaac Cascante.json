@@ -1,0 +1,15 @@
+{
+    "nombre": "Isaac Cascante",
+    "rol": "Usuario",
+    "contrasena": "colochos0304",
+    "perfil": {
+        "correo": "icasca3@gmail.com",
+        "puesto": "Coordinador del Proyecto"
+    },
+    "tareas": {
+        "disponibles": [],
+        "en_revision": [],
+        "completadas": []
+    },
+    "reuniones": []
+}
