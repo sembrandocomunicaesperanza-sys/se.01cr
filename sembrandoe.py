@@ -21,18 +21,18 @@ NOMBRES_USUARIOS=[
 "Sembrando Esperanza",
 "Isaac Cascante",
 "Jayden Marchena",
-"Samantha Mendez",
+"S p",
 "Ismael Navarrete",
-"Pruebas"
+"Samantha Mendez"
 ]
 
 CONTRASENAS_RESPALDO={
-"Samantha Mendez":"samO94",
+"S p":"suli.,",
 "Jayden Marchena":"Marchena1007",
 "Isaac Cascante":"colochos0304",
 "Ismael Navarrete":"ig2230",
 "Sembrando Esperanza":"adminCR",
-"Pruebas":"suli.,"
+"Samantha Mendez":"SM094"
 }
 
 def ruta_usuario(identificador):
